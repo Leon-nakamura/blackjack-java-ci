@@ -1,0 +1,29 @@
+name: CPU Win Rate Simulation
+
+on:
+  workflow_dispatch:
+    inputs:
+      num_games:
+        description: 'Simulation game count'
+        required: true
+        default: '1000'
+
+jobs:
+  simulate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Run Simulation
+        run: |
+          mvn test-compile
+          mvn exec:java -Dexec.mainClass="com.example.BlackJackSimulation" -Dexec.args="${{ github.event.inputs.num_games }}"
